@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # =============================================================================
@@ -63,7 +63,7 @@ from io import StringIO
 from multiprocessing import Queue, get_context, cpu_count
 from timeit import default_timer
 
-from .extract import Extractor, ignoreTag, define_template, acceptedNamespaces
+from extract import Extractor, ignoreTag, define_template, acceptedNamespaces
 
 # ===========================================================================
 
