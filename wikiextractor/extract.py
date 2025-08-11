@@ -31,7 +31,7 @@ import time
 
 # match tail after wikilink
 tailRE = re.compile(r'\w+')
-syntaxhighlight = re.compile('&lt;syntaxhighlight .*?&gt;(.*?)&lt;/syntaxhighlight&gt;', re.DOTALL)
+syntaxhighlight = re.compile(r'&lt;syntaxhighlight .*?&gt;(.*?)&lt;/syntaxhighlight&gt;', re.DOTALL)
 
 ## PARAMS ####################################################################
 
@@ -1010,7 +1010,7 @@ class Extractor():
     maxParameterRecursionLevels = 16
 
     # check for template beginning
-    reOpen = re.compile('(?<!{){{(?!{)', re.DOTALL)
+    reOpen = re.compile(r'(?<!{){{(?!{)', re.DOTALL)
 
     def expandTemplates(self, wikitext):
         """
@@ -1100,7 +1100,7 @@ class Extractor():
             # The '=' might occurr within quotes:
             # ''''<span lang="pt-pt" xml:lang="pt-pt">cénicas</span>'''
 
-            m = re.match(" *([^=']*?) *=(.*)", param, re.DOTALL)
+            m = re.match(r" *([^=']*?) *=(.*)", param, re.DOTALL)
             if m:
                 # This is a named parameter.  This case also handles parameter
                 # assignments like "2=xxx", where the number of an unnamed
@@ -1394,8 +1394,8 @@ def findMatchingBraces(text, ldelim=0):
     #   {{{link|{{ucfirst:{{{1}}}}}} interchange}}}
 
     if ldelim:  # 2-3
-        reOpen = re.compile('[{]{%d,}' % ldelim)  # at least ldelim
-        reNext = re.compile('[{]{2,}|}{2,}')  # at least 2 open or close bracces
+        reOpen = re.compile(r'[{]{%d,}' % ldelim)  # at least ldelim
+        reNext = re.compile(r'[{]{2,}|}{2,}')  # at least 2 open or close bracces
     else:
         reOpen = re.compile(r'{{2,}|\[{2,}')
         reNext = re.compile(r'{{2,}|}{2,}|\[{2,}|]{2,}')  # at least 2
@@ -1542,7 +1542,7 @@ def fullyQualifiedTemplateTitle(templateTitle):
         # Leading colon by itself implies main namespace, so strip this colon
         return ucfirst(templateTitle[1:])
     else:
-        m = re.match('([^:]*)(:.*)', templateTitle)
+        m = re.match(r'([^:]*)(:.*)', templateTitle)
         if m:
             # colon found but not in the first position - check if it
             # designates a known namespace
@@ -1607,10 +1607,10 @@ ROUND = Infix(lambda x, y: round(x, y))
 
 def sharp_expr(expr):
     try:
-        expr = re.sub('=', '==', expr)
-        expr = re.sub('mod', '%', expr)
-        expr = re.sub('\bdiv\b', '/', expr)
-        expr = re.sub('\bround\b', '|ROUND|', expr)
+        expr = re.sub(r'=', '==', expr)
+        expr = re.sub(r'mod', '%', expr)
+        expr = re.sub(r'\bdiv\b', '/', expr)
+        expr = re.sub(r'\bround\b', '|ROUND|', expr)
         return str(eval(expr))
     except:
         return '<span class="error"></span>'
@@ -1846,7 +1846,7 @@ def define_template(title, page):
     text = re.sub(r'<noinclude/>', '', text)
 
     onlyincludeAccumulator = ''
-    for m in re.finditer('<onlyinclude>(.*?)</onlyinclude>', text, re.DOTALL):
+    for m in re.finditer(r'<onlyinclude>(.*?)</onlyinclude>', text, re.DOTALL):
         onlyincludeAccumulator += m.group(1)
     if onlyincludeAccumulator:
         text = onlyincludeAccumulator
