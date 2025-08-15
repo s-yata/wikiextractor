@@ -55,6 +55,7 @@ collecting template definitions.
 
 import argparse
 import bz2
+import json
 import logging
 import os.path
 import re  # TODO use regex when it will be standard
@@ -500,7 +501,7 @@ def reduce_process(output_queue, output):
     """
 
     interval_start = default_timer()
-    period = 100000
+    period = 1000
     # FIXME: use a heap
     ordering_buffer = {}  # collected pages
     next_ordinal = 0  # sequence number of pages
@@ -514,12 +515,18 @@ def reduce_process(output_queue, output):
                 logging.info("Extracted %d articles (%.1f art/s)",
                              next_ordinal, interval_rate)
                 interval_start = default_timer()
+        elif len(ordering_buffer) > 10000:
+            # This skips accidentally lost ordinals.
+            next_ordinal += 1
         else:
             # mapper puts None to signal finish
             pair = output_queue.get()
             if not pair:
                 break
             ordinal, text = pair
+            # json_data = json.loads(text)
+            # print(json_data["id"], json_data["title"])
+            # logging.info("%s: %s", json_data["id"], json_data["title"])
             ordering_buffer[ordinal] = text
 
 
